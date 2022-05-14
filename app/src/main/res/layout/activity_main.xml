@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/chgbreakoil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -17,7 +17,7 @@
         tools:layout_editor_absoluteY="254dp" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/chgtimigbelt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -27,13 +27,13 @@
         tools:layout_editor_absoluteY="331dp" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/curkminput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="48dp"
+        tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="70dp" />
 
     <Button
@@ -76,8 +76,16 @@
         tools:layout_editor_absoluteX="288dp"
         tools:layout_editor_absoluteY="424dp" />
 
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="288dp"
+        tools:layout_editor_absoluteY="502dp" />
+
     <EditText
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/chgenginoil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -87,12 +95,22 @@
         tools:layout_editor_absoluteY="171dp" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/chgbattery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="48dp"
+        tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="427dp" />
+
+    <EditText
+        android:id="@+id/chgairconfilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="502dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
