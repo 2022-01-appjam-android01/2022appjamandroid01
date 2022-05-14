@@ -7,110 +7,171 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/chgbreakoil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="252dp" />
-
-    <EditText
-        android:id="@+id/chgtimigbelt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="334dp" />
-
-    <EditText
         android:id="@+id/curkminput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="68dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
+        android:minHeight="48dp"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="70dp" />
+        app:layout_constraintEnd_toStartOf="@+id/applycheck"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/applycheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="41dp"
         android:text="입력 완료"
-        tools:layout_editor_absoluteX="276dp"
-        tools:layout_editor_absoluteY="67dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/chgenginoil"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="170dp" />
+        app:layout_constraintEnd_toEndOf="@id/curkminput"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="167dp">
 
-    <EditText
-        android:id="@+id/chgbattery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="408dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/chgairconfilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="489dp" />
+            <EditText
+                android:id="@+id/chgenginoil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="엔진오일" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="엔진오일"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="186dp" />
+            <EditText
+                android:id="@+id/chgmissionoil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="미션오일" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="미션오일"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="265dp" />
+            <EditText
+                android:id="@+id/chgbreakoil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="브레이크 오일" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="타이밍 벨트"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="356dp" />
+            <EditText
+                android:id="@+id/chgsparkplug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="스파크 플러그" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="배터리"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="425dp" />
+            <EditText
+                android:id="@+id/chgtimigbelt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="타이밍 벨트" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="에어컨 필터"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="505dp" />
+            <EditText
+                android:id="@+id/chgbreakpad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="브레이크패드" />
+
+            <EditText
+                android:id="@+id/chgbreaklining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="브레이크 라이닝" />
+
+            <EditText
+                android:id="@+id/chgclutchdisk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="클러치 디스크" />
+
+            <EditText
+                android:id="@+id/chgtirelocationchange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="타이어 부분 교환" />
+
+            <EditText
+                android:id="@+id/chgtire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="타이어" />
+
+            <EditText
+                android:id="@+id/chgbattery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="29dp"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="배터리" />
+
+            <EditText
+                android:id="@+id/chgantifreeze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="결빙제" />
+
+            <EditText
+                android:id="@+id/chgairconfilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="에어컨 필터" />
+
+            <EditText
+                android:id="@+id/chgwiper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:text="와이퍼" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
