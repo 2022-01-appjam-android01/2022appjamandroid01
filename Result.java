@@ -9,12 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class Resultpage extends AppCompatActivity {
+import com.example.appjam22.MainActivity;
+import com.example.appjam22.R;
+
+public class Result extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resultpage);
+        setContentView(R.layout.activity_result);
 
         ListView listview = findViewById(R.id.listview);
 
@@ -23,7 +26,7 @@ public class Resultpage extends AppCompatActivity {
         String result = intent.getStringExtra("");
         String[] data= result.split(",");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_checked, data);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.items, data);
         listview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -32,7 +35,7 @@ public class Resultpage extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             }
         });
