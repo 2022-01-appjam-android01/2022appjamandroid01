@@ -13,8 +13,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="254dp" />
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="252dp" />
 
     <EditText
         android:id="@+id/chgtimigbelt"
@@ -23,8 +23,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="331dp" />
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="334dp" />
 
     <EditText
         android:id="@+id/curkminput"
@@ -37,52 +37,12 @@
         tools:layout_editor_absoluteY="70dp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/applycheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="입력 완료"
         tools:layout_editor_absoluteX="276dp"
         tools:layout_editor_absoluteY="67dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="288dp"
-        tools:layout_editor_absoluteY="168dp" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="288dp"
-        tools:layout_editor_absoluteY="251dp" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="288dp"
-        tools:layout_editor_absoluteY="328dp" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="288dp"
-        tools:layout_editor_absoluteY="424dp" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="288dp"
-        tools:layout_editor_absoluteY="502dp" />
 
     <EditText
         android:id="@+id/chgenginoil"
@@ -91,8 +51,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="171dp" />
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="170dp" />
 
     <EditText
         android:id="@+id/chgbattery"
@@ -101,8 +61,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="427dp" />
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="408dp" />
 
     <EditText
         android:id="@+id/chgairconfilter"
@@ -111,6 +71,46 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="502dp" />
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="489dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="엔진오일"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="186dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="미션오일"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="265dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="타이밍 벨트"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="356dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="배터리"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="425dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="에어컨 필터"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="505dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
