@@ -24,25 +24,40 @@ class DataManager : AppCompatActivity() {
     }
 
     private fun handleRequest(reqBundle: Bundle) {
-        val request = reqBundle.getString("request")
-        val needToMaintain = ArrayList<String>()
-        if (request=="used") {
-            val distance = reqBundle.getFloat("distance")
-            saved_replace = loadSaved()
-            saved_replace!!.add_used(distance)
-            saved_replace!!::class.memberProperties.forEach {
-                if (it is KMutableProperty<*>) {
-                    if (it.getter.call(saved_replace) == 0f)
-                        needToMaintain.add(it.name)
-                }
+        when (reqBundle.getString("request")) {
+            "used" -> {
+                val distance = reqBundle.getFloat("distance")
+                usedDistance(distance)
             }
-            intent = Intent()
-            intent.putExtras(Bundle())
-            intent.extras!!.putString("needToMaintain",needToMaintain.joinToString(","))
-            setResult(RESULT_OK, intent)
-            finish()
+            "reset" -> {
+                val resetList = reqBundle
+                    .getString("reset")!!
+                    .split(",")
+                    .toCollection(ArrayList<String>())
+                resetUsed(resetList)
+            }
         }
-        val target_replace = PartFields(
+    }
+
+    private fun usedDistance(distance: Float) {
+        val needToMaintain = ArrayList<String>()
+        saved_replace = loadSaved()
+        saved_replace!!.add_used(distance)
+        saved_replace!!::class.memberProperties.forEach {
+            if (it is KMutableProperty<*>) {
+                if (it.getter.call(saved_replace) == 0f)
+                    needToMaintain.add(it.name)
+            }
+        }
+        intent = Intent()
+        intent.putExtras(Bundle())
+        intent.extras!!.putString("needToMaintain", needToMaintain.joinToString(","))
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
+    private fun resetUsed(resetList: ArrayList<String>) {
+        val targetReplace = PartFields(
             oil_filter = 5000f,
             mission_oil = 80000f,
             break_oil = 50000f,
@@ -59,8 +74,17 @@ class DataManager : AppCompatActivity() {
             air_controller = 15000f,
             wiper = 10000f,
         )
-
-
+        val partField = loadSaved()
+        var value: Float
+        partField::class.members.forEach {
+            if (it.name in resetList && it is KMutableProperty<*>) {
+                resetList.remove(it.name)
+                value = it.getter.call(targetReplace) as Float
+                it.setter.call(partField, value)
+                editor.putFloat(it.name, value)
+            }
+        }
+        editor.commit()
     }
 
     private fun loadSaved(): PartFields {
@@ -71,6 +95,7 @@ class DataManager : AppCompatActivity() {
                 editor.putFloat(it.name, it.getter.call(partField) as Float)
             }
         }
+        editor.commit()
         return partField
     }
 
