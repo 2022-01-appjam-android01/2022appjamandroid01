@@ -1,7 +1,7 @@
 package com.applay22.appjam01.partInfo
 
 @kotlinx.serialization.Serializable
-data class PertFields(
+data class PartFields(
     var oil_filter: Float = 0f,
     var mission_oil: Float = 0f,
     var break_oil: Float = 0f,
@@ -13,7 +13,6 @@ data class PertFields(
     var Clutch_Disc: Float = 0f,
     var tier_location_change: Float = 0f,
     var tier_change: Float = 0f,
-    var wile_alignments: Float = 0f,
     var battery: Float = 0f,
     var anti_freeze: Float = 0f,
     var air_controller: Float = 0f,
