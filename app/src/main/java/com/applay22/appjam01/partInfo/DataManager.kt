@@ -10,13 +10,13 @@ import kotlin.reflect.full.memberProperties
 class DataManager : AppCompatActivity() {
     private lateinit var preference: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-    private var saved_replace: PartFields? = null
+    private lateinit var saved_replace: PartFields
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
         editor = preference.edit()
-
+        saved_replace = loadSaved()
         val reqBundle = intent.extras
         if (reqBundle != null) {
             handleRequest(reqBundle)
@@ -24,31 +24,42 @@ class DataManager : AppCompatActivity() {
     }
 
     private fun handleRequest(reqBundle: Bundle) {
+
         when (reqBundle.getString("request")) {
             "used" -> {
                 val distance = reqBundle.getFloat("distance")
-                usedDistance(distance)
+                val maintainList = usedDistance(distance)
+                sendMaintainList(maintainList)
             }
             "reset" -> {
                 val resetList = reqBundle
                     .getString("reset")!!
                     .split(",")
                     .toCollection(ArrayList<String>())
-                resetUsed(resetList)
+                val maintainList = resetUsed(resetList)
+                sendMaintainList(maintainList)
+            }
+            "list" -> {
+                val maintainList = getRequireMaintain()
+                sendMaintainList(maintainList)
             }
         }
+
     }
 
-    private fun usedDistance(distance: Float) {
+    private fun getRequireMaintain(): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
-        saved_replace = loadSaved()
-        saved_replace!!.add_used(distance)
-        saved_replace!!::class.memberProperties.forEach {
+        saved_replace::class.members.forEach {
             if (it is KMutableProperty<*>) {
-                if (it.getter.call(saved_replace) == 0f)
+                if (it.getter.call(saved_replace) as Float == 0f) {
                     needToMaintain.add(it.name)
+                }
             }
         }
+        return needToMaintain
+    }
+
+    private fun sendMaintainList(needToMaintain: ArrayList<String>) {
         intent = Intent()
         intent.putExtras(Bundle())
         intent.extras!!.putString("needToMaintain", needToMaintain.joinToString(","))
@@ -56,7 +67,18 @@ class DataManager : AppCompatActivity() {
         finish()
     }
 
-    private fun resetUsed(resetList: ArrayList<String>) {
+    private fun usedDistance(distance: Float): ArrayList<String> {
+        val needToMaintain = ArrayList<String>()
+        saved_replace.add_used(distance)
+        saved_replace::class.memberProperties.forEach {
+            if (it is KMutableProperty<*>)
+                if (it.getter.call(saved_replace) == 0f)
+                    needToMaintain.add(it.name)
+        }
+        return needToMaintain
+    }
+
+    private fun resetUsed(resetList: ArrayList<String>): ArrayList<String> {
         val targetReplace = PartFields(
             oil_filter = 5000f,
             mission_oil = 80000f,
@@ -74,17 +96,24 @@ class DataManager : AppCompatActivity() {
             air_controller = 15000f,
             wiper = 10000f,
         )
-        val partField = loadSaved()
         var value: Float
-        partField::class.members.forEach {
-            if (it.name in resetList && it is KMutableProperty<*>) {
-                resetList.remove(it.name)
-                value = it.getter.call(targetReplace) as Float
-                it.setter.call(partField, value)
-                editor.putFloat(it.name, value)
+        val needToMaintain = ArrayList<String>()
+        saved_replace::class.members.forEach {
+            if (it is KMutableProperty<*>) {
+                if (it.name in resetList) {
+                    resetList.remove(it.name)
+                    value = it.getter.call(targetReplace) as Float
+                    it.setter.call(saved_replace, value)
+                    editor.putFloat(it.name, value)
+                } else {
+                    value = it.getter.call(saved_replace) as Float
+                    if (value == 0f)
+                        needToMaintain.add(it.name)
+                }
             }
         }
         editor.commit()
+        return needToMaintain
     }
 
     private fun loadSaved(): PartFields {
