@@ -61,9 +61,17 @@ class DataManager : AppCompatActivity() {
             updateSelectedAll(allSelected)
         }
         resetSelectedBtn.setOnClickListener {
-            resetSelectedAll(editor)
-            selectAllBtn.text = "전체 선택"
-            allSelected = false
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder.setMessage("정말로 초기화 하시겠습니까?")
+            dialogBuilder.setNegativeButton("No", null)
+            dialogBuilder.setPositiveButton(
+                "Yes"
+            ) { _, _ ->
+                resetSelectedAll(editor)
+                selectAllBtn.text = "전체 선택"
+                allSelected = false
+            }
+            dialogBuilder.create().show()
         }
     }
 
