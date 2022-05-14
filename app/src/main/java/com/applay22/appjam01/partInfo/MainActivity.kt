@@ -2,7 +2,9 @@ package com.applay22.appjam01.partInfo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.LinearLayout
+import android.widget.TableLayout
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,10 +29,35 @@ class MainActivity : AppCompatActivity() {
             val bundle = Bundle()
 
             val text = binding.curkminput.text.toString()
-            bundle.putFloat("distance", text.toFloat())
-            bundle.putString("request", "used")
-            mIntent.putExtras(bundle)
-            mactivityreslauncher.launch(mIntent)
+            if (text != "") {
+                bundle.putFloat("distance", text.toFloat())
+                bundle.putString("request", "used")
+                mIntent.putExtras(bundle)
+                mactivityreslauncher.launch(mIntent)
+            }
+        }
+        val intent = Intent(this,  DataManageActivity::class.java)
+        val bundle = Bundle()
+        bundle.putString("request", "list")
+        intent.putExtras(bundle)
+        mactivityreslauncher.launch(intent)
+    }
+
+    private fun renderList(requiredList: List<String>) {
+        val layoutParams = LinearLayout.LayoutParams(
+            TableLayout.LayoutParams.MATCH_PARENT,
+            TableLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.bottomMargin = 20
+        val layout = binding.listItem
+        layout.removeAllViews()
+        requiredList.forEach {
+            val tv = TextView(this)
+            tv.textSize = 20f
+            tv.layoutParams = layoutParams
+            tv.text = it
+
+            layout.addView(tv)
 
         }
     }
@@ -38,8 +65,11 @@ class MainActivity : AppCompatActivity() {
     private fun handleResult(result: ActivityResult) {
         val bundle = result.data?.extras
         val resultBundle = bundle?.getString("needToMaintain")
-        if(resultBundle !=null)
-            Log.d("Logggg",resultBundle)
+        if (resultBundle != null) {
+            val requiredList = resultBundle.split(",")
+            renderList(requiredList)
+
+        }
     }
 
 

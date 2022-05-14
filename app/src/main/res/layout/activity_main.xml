@@ -11,167 +11,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="38sp"
         android:ems="10"
         android:inputType="number"
-        android:minHeight="48dp"
+        android:minHeight="48sp"
         android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/applycheck"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/applycheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
-        android:layout_marginEnd="41dp"
         android:text="입력 완료"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/curkminput"
+        app:layout_constraintLeft_toRightOf="@id/curkminput"
+        app:layout_constraintTop_toTopOf="@id/curkminput" />
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@id/curkminput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/curkminput"
         tools:layout_editor_absoluteY="167dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="20sp"
+            android:id="@+id/list_item"
+            android:orientation="vertical"/>
 
-            <EditText
-                android:id="@+id/chgenginoil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="엔진오일" />
-
-            <EditText
-                android:id="@+id/chgmissionoil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="미션오일" />
-
-            <EditText
-                android:id="@+id/chgbreakoil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="브레이크 오일" />
-
-            <EditText
-                android:id="@+id/chgsparkplug"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="스파크 플러그" />
-
-            <EditText
-                android:id="@+id/chgtimigbelt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="타이밍 벨트" />
-
-            <EditText
-                android:id="@+id/chgbreakpad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="브레이크패드" />
-
-            <EditText
-                android:id="@+id/chgbreaklining"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="브레이크 라이닝" />
-
-            <EditText
-                android:id="@+id/chgclutchdisk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="클러치 디스크" />
-
-            <EditText
-                android:id="@+id/chgtirelocationchange"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="타이어 부분 교환" />
-
-            <EditText
-                android:id="@+id/chgtire"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="타이어" />
-
-            <EditText
-                android:id="@+id/chgbattery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="배터리" />
-
-            <EditText
-                android:id="@+id/chgantifreeze"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="결빙제" />
-
-            <EditText
-                android:id="@+id/chgairconfilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="에어컨 필터" />
-
-            <EditText
-                android:id="@+id/chgwiper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:minHeight="48dp"
-                android:text="와이퍼" />
-
-        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

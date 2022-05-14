@@ -30,8 +30,6 @@ class DataManageActivity : AppCompatActivity() {
 
         val preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
         val editor = preference.edit()
-        editor.clear()
-        editor.apply()
         loadSaved(preference, editor)
 
         val reqBundle = intent.extras
