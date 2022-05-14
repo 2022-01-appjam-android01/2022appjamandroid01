@@ -1,5 +1,12 @@
 package com.applay22.appjam01.partInfo
 
+import android.util.Log
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
+import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.javaGetter
+
 @kotlinx.serialization.Serializable
 data class PartFields(
     var oil_filter: Float = 0f,
@@ -18,4 +25,16 @@ data class PartFields(
     var air_controller: Float = 0f,
     var wiper: Float = 0f,
 
-    )
+    ) {
+
+    fun add_used(distance: Float) {
+        var value = 0f
+        this::class.memberProperties.forEach {
+            if (it is KMutableProperty<*>) {
+                value = it.getter.call(this) as Float
+                if (value < distance) value -= distance
+                it.setter.call(this, value)
+            }
+        }
+    }
+}
