@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
                 mactivityreslauncher.launch(mIntent)
             }
         }
+        binding.allbtn.setOnClickListener {
+            val mIntent = Intent(this, DataManageActivity::class.java)
+            startActivity(mIntent)
+        }
         val intent = Intent(this,  DataManageActivity::class.java)
         val bundle = Bundle()
         bundle.putString("request", "list")
@@ -53,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         layout.removeAllViews()
         requiredList.forEach {
             val tv = TextView(this)
-            tv.textSize = 20f
+            tv.textSize = 30f
             tv.layoutParams = layoutParams
             tv.text = it
 
