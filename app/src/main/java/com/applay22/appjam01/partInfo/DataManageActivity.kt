@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import kotlin.math.floor
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 
-class DataManager : AppCompatActivity() {
+class DataManageActivity : AppCompatActivity() {
     //region components
     private lateinit var savedReplace: PartFields
     private lateinit var itemListView: ListView
@@ -31,14 +30,18 @@ class DataManager : AppCompatActivity() {
 
         val preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
         val editor = preference.edit()
+        editor.clear()
+        editor.apply()
         loadSaved(preference, editor)
 
         val reqBundle = intent.extras
         if (reqBundle != null) {
             val handler = DataManage(preference, savedReplace, fields)
             val intent = handler.handleRequest(reqBundle)
-            setResult(RESULT_OK, intent)
-            finish()
+            if (intent != null) {
+                setResult(RESULT_OK, intent)
+                finish()
+            }
         }
         setContentView(R.layout.check_state)
         bindView(editor)
@@ -88,7 +91,6 @@ class DataManager : AppCompatActivity() {
 
     private fun updateSelectedAll(state: Boolean) {
         val adapter = itemListView.adapter as MaintainAdapter
-        Log.d("state", state.toString())
         for (i in fields.indices) {
             adapter.selected[i] = state
         }
@@ -101,7 +103,6 @@ class DataManager : AppCompatActivity() {
         fields = PartFields::class.memberProperties.toList().filterIsInstance<KMutableProperty<*>>()
         fields.forEach {
             val loadedValue = preference.getFloat(it.name, 0f)
-            Log.d("Loaded", it.name)
             it.setter.call(partField, preference.getFloat(it.name, loadedValue))
             changed = true
         }
@@ -224,7 +225,6 @@ class DataManage(
 ) {
     private val editor: SharedPreferences.Editor = preference.edit()
     fun handleRequest(reqBundle: Bundle): Intent? {
-
         when (reqBundle.getString("request")) {
             "used" -> {
                 val distance = reqBundle.getFloat("distance")
@@ -251,8 +251,9 @@ class DataManage(
         val needToMaintain = ArrayList<String>()
         saved_replace.add_used(distance)
         fields.forEach {
-            if (isMaintainRequired(it))
+            if (isMaintainRequired(it)) {
                 needToMaintain.add(it.name)
+            }
         }
         return needToMaintain
     }
@@ -289,13 +290,14 @@ class DataManage(
 
     private fun isMaintainRequired(field: KMutableProperty<*>): Boolean {
         val value = field.getter.call(saved_replace) as Float
-        return value == 0f
+        return value <= 0f
     }
 
     private fun makeMaintainListIntent(needToMaintain: ArrayList<String>): Intent {
         val intent = Intent()
-        intent.putExtras(Bundle())
-        intent.extras!!.putString("needToMaintain", needToMaintain.joinToString(","))
+        val bundle = Bundle()
+        bundle.putString("needToMaintain", needToMaintain.joinToString(","))
+        intent.putExtras(bundle)
         return intent
     }
 
