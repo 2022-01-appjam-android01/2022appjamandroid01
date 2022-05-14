@@ -16,7 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val data=arrayOf<String>("오일 필터","미션 오일","브레이크 오일","파워 오일","스파크 플러그","타이밍 벨트","브레이킹 패드","브레이크 라이닝","클러치 디스크","타이어 부분 변경","타이어","배터리","결빙 방지","에어컨 필터","와이퍼")
-        binding.rvView.adapter=MessageAdapter(data)
+        var dist=arrayOf<String>("0","0","0","0","0","0","0","0","0","0","0","0","0","0","0")
+        binding.rvView.adapter=MessageAdapter(data,dist)
         binding.rvView.layoutManager=LinearLayoutManager(this)
         binding.applycheck.setOnClickListener{
             val mIntent=Intent(this,dataManager::class.java)

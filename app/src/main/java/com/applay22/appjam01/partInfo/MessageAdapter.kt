@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.applay22.appjam01.partInfo.databinding.ActivityListItemBinding
 
-class MessageAdapter(private var data:Array<String>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>(){
+class MessageAdapter(private var data:Array<String>,private var dist:Array<String>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>(){
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -17,6 +17,7 @@ class MessageAdapter(private var data:Array<String>) : RecyclerView.Adapter<Mess
 
     override fun onBindViewHolder(holder: MessageAdapter.MessageViewHolder, position: Int) {
         holder.listitem.text=data[position]
+        dist[position]=holder.test.toString()
     }
 
     override fun getItemCount(): Int {
@@ -24,5 +25,6 @@ class MessageAdapter(private var data:Array<String>) : RecyclerView.Adapter<Mess
     }
     inner class MessageViewHolder(private val binding: ActivityListItemBinding) : RecyclerView.ViewHolder(binding.root){
         var listitem=binding.textView6
+        var test=binding.recentkm
     }
 }

@@ -8,7 +8,7 @@
     tools:context=".list_item">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/recentkm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -26,6 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="TextView"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/recentkm"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
