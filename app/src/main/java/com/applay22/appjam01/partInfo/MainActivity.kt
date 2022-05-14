@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
             var intent=Intent()
             intent.putExtras(Bundle())
             intent.extras?.putFloat("distance",binding.curkminput.toString().toFloat())
+            intent.extras?.putString("request","used")
             mactivityreslauncher.launch(mIntent)
         }
     }
