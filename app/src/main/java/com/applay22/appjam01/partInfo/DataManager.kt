@@ -8,36 +8,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.floor
 import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 class DataManager : AppCompatActivity() {
     private lateinit var preference: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-    private lateinit var saved_replace: PartFields
+    private lateinit var savedReplace: PartFields
     private lateinit var itemList: ListView
+    private lateinit var selectAll: Button
+    private lateinit var resetSelected: Button
+    private lateinit var fields: List<KProperty1<out PartFields, *>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
         editor = preference.edit()
-        saved_replace = loadSaved()
+        savedReplace = loadSaved()
+        fields = savedReplace::class.memberProperties.toList()
+
         val reqBundle = intent.extras
         if (reqBundle != null) {
-            val handler = Data_Manager(preference, saved_replace)
+            val handler = DataManage(preference, savedReplace, fields)
             val intent = handler.handleRequest(reqBundle)
             setResult(RESULT_OK, intent)
             finish()
         }
         setContentView(R.layout.check_state)
         itemList = findViewById(R.id.item_list)
-        itemList.adapter = MaintainAdapter(saved_replace, this, editor)
-
+        resetSelected = findViewById(R.id.reset_selected)
+        selectAll = findViewById(R.id.select_all)
+        itemList.adapter = MaintainAdapter(savedReplace, this, editor)
 
     }
 
@@ -110,9 +118,10 @@ class MaintainAdapter(
 }
 
 
-class Data_Manager(
+class DataManage(
     preference: SharedPreferences,
-    var saved_replace: PartFields
+    private var saved_replace: PartFields,
+    private val fields: List<KProperty1<out PartFields, *>>
 ) {
     private val editor: SharedPreferences.Editor = preference.edit()
     fun handleRequest(reqBundle: Bundle): Intent? {
@@ -120,15 +129,15 @@ class Data_Manager(
         when (reqBundle.getString("request")) {
             "used" -> {
                 val distance = reqBundle.getFloat("distance")
-                val maintainList = usedDistance(saved_replace, distance)
+                val maintainList = usedDistance(distance)
                 return makeMaintainListIntent(maintainList)
             }
             "reset" -> {
                 val resetList = reqBundle
                     .getString("reset")!!
                     .split(",")
-                    .toCollection(ArrayList<String>())
-                val maintainList = resetUsed(saved_replace, resetList)
+                    .toCollection(ArrayList())
+                val maintainList = resetUsed(resetList)
                 return makeMaintainListIntent(maintainList)
             }
             "list" -> {
@@ -139,12 +148,12 @@ class Data_Manager(
         return null
     }
 
-    private fun usedDistance(savedReplace: PartFields, distance: Float): ArrayList<String> {
+    private fun usedDistance(distance: Float): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
-        savedReplace.add_used(distance)
-        savedReplace::class.memberProperties.forEach {
+        saved_replace.add_used(distance)
+        fields.forEach {
             if (it is KMutableProperty<*>)
-                if (it.getter.call(savedReplace) == 0f)
+                if (isMaintainRequired(it))
                     needToMaintain.add(it.name)
         }
         return needToMaintain
@@ -152,39 +161,40 @@ class Data_Manager(
 
     private fun getRequireMaintain(): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
-        saved_replace::class.memberProperties.forEach {
-            if (it is KMutableProperty<*>) {
-                if (it.getter.call(saved_replace) as Float == 0f) {
+        fields.forEach {
+            if (it is KMutableProperty<*>)
+                if (isMaintainRequired(it))
                     needToMaintain.add(it.name)
-                }
-            }
         }
         return needToMaintain
     }
 
-    private fun resetUsed(
-        savedReplace: PartFields,
-        resetList: ArrayList<String>
-    ): ArrayList<String> {
-
-        var value: Float
+    private fun resetUsed(resetList: ArrayList<String>): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
-        savedReplace::class.memberProperties.forEach {
+        fields.forEach {
             if (it is KMutableProperty<*>) {
                 if (it.name in resetList) {
+                    resetOne(it)
                     resetList.remove(it.name)
-                    value = it.getter.call(targetReplace) as Float
-                    it.setter.call(savedReplace, value)
-                    editor.putFloat(it.name, value)
                 } else {
-                    value = it.getter.call(savedReplace) as Float
-                    if (value == 0f)
+                    if (isMaintainRequired(it))
                         needToMaintain.add(it.name)
                 }
             }
         }
         editor.commit()
         return needToMaintain
+    }
+
+    private fun resetOne(field: KMutableProperty<*>) {
+        val value = field.getter.call(targetReplace) as Float
+        field.setter.call(saved_replace, value)
+        editor.putFloat(field.name, value)
+    }
+
+    private fun isMaintainRequired(field: KMutableProperty<*>): Boolean {
+        val value = field.getter.call(saved_replace) as Float
+        return value == 0f
     }
 
     private fun makeMaintainListIntent(needToMaintain: ArrayList<String>): Intent {
