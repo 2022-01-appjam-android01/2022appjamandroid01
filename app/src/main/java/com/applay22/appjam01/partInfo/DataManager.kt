@@ -4,35 +4,35 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.floor
 import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 class DataManager : AppCompatActivity() {
-    private lateinit var preference: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
+    //region components
     private lateinit var savedReplace: PartFields
-    private lateinit var itemList: ListView
-    private lateinit var selectAll: Button
-    private lateinit var resetSelected: Button
-    private lateinit var fields: List<KProperty1<out PartFields, *>>
+    private lateinit var itemListView: ListView
+    private lateinit var selectAllBtn: Button
+    private lateinit var resetSelectedBtn: Button
+
+    //endregion
+    private lateinit var fields: List<KMutableProperty<*>>
+    private var allSelected = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
-        editor = preference.edit()
-        savedReplace = loadSaved()
-        fields = savedReplace::class.memberProperties.toList()
+        val preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
+        val editor = preference.edit()
+        editor.clear()
+        editor.apply()
+        loadSaved(preference, editor)
 
         val reqBundle = intent.extras
         if (reqBundle != null) {
@@ -42,35 +42,77 @@ class DataManager : AppCompatActivity() {
             finish()
         }
         setContentView(R.layout.check_state)
-        itemList = findViewById(R.id.item_list)
-        resetSelected = findViewById(R.id.reset_selected)
-        selectAll = findViewById(R.id.select_all)
-        itemList.adapter = MaintainAdapter(savedReplace, this, editor)
-
+        bindView(editor)
     }
 
+    private fun bindView(editor: SharedPreferences.Editor) {
+        itemListView = findViewById(R.id.item_list)
+        resetSelectedBtn = findViewById(R.id.reset_selected)
+        selectAllBtn = findViewById(R.id.select_all)
 
-    private fun loadSaved(): PartFields {
-        val partField = PartFields()
-        partField::class.memberProperties.forEach {
-            if (it is KMutableProperty<*>) {
-                it.setter.call(partField, preference.getFloat(it.name, 0f))
-                editor.putFloat(it.name, it.getter.call(partField) as Float)
+        itemListView.adapter = MaintainAdapter(savedReplace, fields, this, editor)
+        selectAllBtn.setOnClickListener {
+            if (allSelected) {
+                selectAllBtn.text = "선택 해제"
+                allSelected = false
+            } else {
+                selectAllBtn.text = "전체 선택"
+                allSelected = true
             }
+            updateSelectedAll(allSelected)
         }
+        resetSelectedBtn.setOnClickListener {
+            resetSelectedAll(editor)
+            selectAllBtn.text = "전체 선택"
+            allSelected = false
+        }
+    }
+
+    private fun resetSelectedAll(editor: SharedPreferences.Editor) {
+        val adapter = itemListView.adapter as MaintainAdapter
+        for (i in fields.indices) {
+            if (adapter.selected[i])
+                adapter.reset(i)
+        }
+        allSelected = false
         editor.commit()
-        return partField
+        runOnUiThread { adapter.notifyDataSetChanged() }
+    }
+
+    private fun updateSelectedAll(state: Boolean) {
+        val adapter = itemListView.adapter as MaintainAdapter
+        Log.d("state", state.toString())
+        for (i in fields.indices) {
+            adapter.selected[i] = state
+        }
+        runOnUiThread { adapter.notifyDataSetChanged() }
+    }
+
+    private fun loadSaved(preference: SharedPreferences, editor: SharedPreferences.Editor) {
+        val partField = PartFields()
+        var changed = false
+        fields = PartFields::class.memberProperties.toList().filterIsInstance<KMutableProperty<*>>()
+        fields.forEach {
+            val loadedValue = preference.getFloat(it.name, 0f)
+            Log.d("Loaded", it.name)
+            it.setter.call(partField, preference.getFloat(it.name, loadedValue))
+            changed = true
+        }
+        if (changed)
+            editor.commit()
+        savedReplace = partField
     }
 
 }
 
 class MaintainAdapter(
     private var savedReplace: PartFields,
-    private val context: Context,
-    private val editor: SharedPreferences.Editor
+    val fields: List<KMutableProperty<*>>,
+    val context: Context,
+    val editor: SharedPreferences.Editor
 ) :
     BaseAdapter() {
-    private val fields = savedReplace::class.memberProperties.toList()
+    var selected: Array<Boolean> = Array(fields.size) { false }
     private val inflater = LayoutInflater.from(context)
     override fun getCount(): Int {
         return fields.size
@@ -84,44 +126,91 @@ class MaintainAdapter(
         return p0.toLong()
     }
 
-    override fun getView(p0: Int, p1: View?, parent: ViewGroup?): View {
-        val view = inflater.inflate(R.layout.check_state_item, null)
-        val titleTxtView: TextView = view.findViewById(R.id.item_name)
-        val stateTxtView: TextView = view.findViewById(R.id.item_state)
-        val field = fields[p0]
-        titleTxtView.text = field.name
-        if (field is KMutableProperty<*>) {
-            val current = floor(field.getter.call(savedReplace) as Float).toInt()
-            stateTxtView.text = "$current km"
+    override fun getView(p0: Int, view: View?, parent: ViewGroup?): View {
+        lateinit var viewHolder: ViewHolder
+        lateinit var convertedView: View
+        if (view == null) {
+            convertedView = inflater.inflate(R.layout.check_state_item, null)
+            viewHolder =
+                ViewHolder(convertedView, savedReplace, p0, this)
+            convertedView.tag = viewHolder
+        } else {
+            convertedView = view
+            viewHolder = view.tag as ViewHolder
+            viewHolder.updateView(savedReplace, p0)
         }
-        view.setOnClickListener {
-            if (field is KMutableProperty<*>) {
-                val dialogBuilder = AlertDialog.Builder(context)
-                dialogBuilder.setMessage("정말로 초기화 하시겠습니까?")
-                dialogBuilder.setPositiveButton(
-                    "Yes"
-                ) { _, _ ->
-                    val newValue = field.getter.call(targetReplace) as Float
-                    field.setter.call(targetReplace, newValue)
-                    val current = floor(newValue).toInt()
-                    stateTxtView.text = "$current km"
-                    editor.putFloat(field.name, newValue)
-                }
-                dialogBuilder.setNegativeButton("No", null).create().show()
-
-            }
-        }
-        return view
+        return convertedView
     }
 
-
+    fun reset(index: Int) {
+        val newValue = fields[index].getter.call(targetReplace) as Float
+        fields[index].setter.call(savedReplace, newValue)
+        selected[index] = false
+    }
 }
 
+class ViewHolder(
+    view: View,
+    savedReplace: PartFields,
+    private val index: Int,
+    private val adapter: MaintainAdapter
+) {
+    private var field: KMutableProperty<*> = adapter.fields[index]
+    private val titleTextView: TextView = view.findViewById(R.id.item_name)
+    private val stateTextView: TextView = view.findViewById(R.id.item_state)
+    private val selectCheckBox: CheckBox = view.findViewById(R.id.item_select)
+
+    fun updateView(savedReplace: PartFields, index: Int) {
+        (adapter.context as AppCompatActivity).runOnUiThread {
+            this.field = adapter.fields[index]
+            titleTextView.text = field.name
+            updateLeftState(field.getter.call(savedReplace) as Float)
+            this.selectCheckBox.isChecked = adapter.selected[index]
+        }
+    }
+
+    private fun updateLeftState(leftDistance: Float) {
+        val floored: Int = floor(leftDistance).toInt()
+        stateTextView.text = "$floored km"
+    }
+
+    init {
+        updateView(savedReplace, index)
+        selectCheckBox.setOnClickListener {
+            adapter.selected[index] = !adapter.selected[index]
+            (adapter.context as AppCompatActivity).runOnUiThread {
+                this.selectCheckBox.isChecked = adapter.selected[index]
+            }
+        }
+        view.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(adapter.context)
+            dialogBuilder.setMessage("정말로 초기화 하시겠습니까?")
+            dialogBuilder.setNegativeButton("No", null)
+            dialogBuilder.setPositiveButton(
+                "Yes"
+            ) { _, _ ->
+                reset(savedReplace)
+                adapter.editor.commit()
+            }
+            dialogBuilder.create().show()
+        }
+    }
+
+    private fun reset(savedReplace: PartFields) {
+        val newValue = field.getter.call(targetReplace) as Float
+        field.setter.call(savedReplace, newValue)
+        (adapter.context as AppCompatActivity).runOnUiThread {
+            updateLeftState(newValue)
+        }
+        this.adapter.editor.putFloat(field.name, newValue)
+    }
+
+}
 
 class DataManage(
     preference: SharedPreferences,
     private var saved_replace: PartFields,
-    private val fields: List<KProperty1<out PartFields, *>>
+    private val fields: List<KMutableProperty<*>>
 ) {
     private val editor: SharedPreferences.Editor = preference.edit()
     fun handleRequest(reqBundle: Bundle): Intent? {
@@ -152,9 +241,8 @@ class DataManage(
         val needToMaintain = ArrayList<String>()
         saved_replace.add_used(distance)
         fields.forEach {
-            if (it is KMutableProperty<*>)
-                if (isMaintainRequired(it))
-                    needToMaintain.add(it.name)
+            if (isMaintainRequired(it))
+                needToMaintain.add(it.name)
         }
         return needToMaintain
     }
@@ -162,9 +250,8 @@ class DataManage(
     private fun getRequireMaintain(): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
         fields.forEach {
-            if (it is KMutableProperty<*>)
-                if (isMaintainRequired(it))
-                    needToMaintain.add(it.name)
+            if (isMaintainRequired(it))
+                needToMaintain.add(it.name)
         }
         return needToMaintain
     }
@@ -172,14 +259,12 @@ class DataManage(
     private fun resetUsed(resetList: ArrayList<String>): ArrayList<String> {
         val needToMaintain = ArrayList<String>()
         fields.forEach {
-            if (it is KMutableProperty<*>) {
-                if (it.name in resetList) {
-                    resetOne(it)
-                    resetList.remove(it.name)
-                } else {
-                    if (isMaintainRequired(it))
-                        needToMaintain.add(it.name)
-                }
+            if (it.name in resetList) {
+                resetOne(it)
+                resetList.remove(it.name)
+            } else {
+                if (isMaintainRequired(it))
+                    needToMaintain.add(it.name)
             }
         }
         editor.commit()
@@ -203,6 +288,7 @@ class DataManage(
         intent.extras!!.putString("needToMaintain", needToMaintain.joinToString(","))
         return intent
     }
+
 }
 
 val targetReplace = PartFields(

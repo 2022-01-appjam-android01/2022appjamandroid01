@@ -1,11 +1,7 @@
 package com.applay22.appjam01.partInfo
 
-import android.util.Log
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.isAccessible
-import kotlin.reflect.jvm.javaGetter
 
 @kotlinx.serialization.Serializable
 data class PartFields(
@@ -28,7 +24,7 @@ data class PartFields(
     ) {
 
     fun add_used(distance: Float) {
-        var value = 0f
+        var value:Float
         this::class.memberProperties.forEach {
             if (it is KMutableProperty<*>) {
                 value = it.getter.call(this) as Float
