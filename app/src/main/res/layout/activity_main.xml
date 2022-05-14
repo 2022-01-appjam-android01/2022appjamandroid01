@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="number"
         android:minHeight="48dp"
@@ -21,7 +21,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <Button
+        android:id="@+id/applycheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="44dp"
+        android:text="입력 완료"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_view"
+        android:layout_width="409dp"
+        android:layout_height="665dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/curkminput"
+        tools:listitem="@layout/activity_list_item"/>
+
+    <!-- <EditText
         android:id="@+id/chgenginoil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,16 +112,6 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/chgairconfilter" />
 
-    <Button
-        android:id="@+id/applycheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
-        android:layout_marginEnd="41dp"
-        android:text="입력 완료"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -162,6 +171,6 @@
         android:text="미션오일"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chgbattery" />
+        app:layout_constraintTop_toBottomOf="@+id/chgbattery" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
