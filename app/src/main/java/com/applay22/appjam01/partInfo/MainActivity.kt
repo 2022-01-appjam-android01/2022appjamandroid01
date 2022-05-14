@@ -16,7 +16,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.applycheck.setOnClickListener{
             val mIntent=Intent(this,dataManager::class.java)
-            intent.extras?.putFloat("test",binding.curkminput.toString().toFloat())
+            var bundle=Bundle()
+            var intent=Intent()
+            intent.putExtras(Bundle())
+            intent.extras?.putFloat("distance",binding.curkminput.toString().toFloat())
             mactivityreslauncher.launch(mIntent)
         }
     }
