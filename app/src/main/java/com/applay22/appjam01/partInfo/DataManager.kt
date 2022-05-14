@@ -1,5 +1,6 @@
 package com.applay22.appjam01.partInfo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,8 +31,6 @@ class DataManager : AppCompatActivity() {
 
         val preference = getSharedPreferences("usedChecker", MODE_PRIVATE)
         val editor = preference.edit()
-        editor.clear()
-        editor.apply()
         loadSaved(preference, editor)
 
         val reqBundle = intent.extras
@@ -126,6 +125,7 @@ class MaintainAdapter(
         return p0.toLong()
     }
 
+    @SuppressLint("InflateParams")
     override fun getView(p0: Int, view: View?, parent: ViewGroup?): View {
         lateinit var viewHolder: ViewHolder
         lateinit var convertedView: View
@@ -152,7 +152,7 @@ class MaintainAdapter(
 class ViewHolder(
     view: View,
     savedReplace: PartFields,
-    private val index: Int,
+    private var index: Int,
     private val adapter: MaintainAdapter
 ) {
     private var field: KMutableProperty<*> = adapter.fields[index]
@@ -162,6 +162,7 @@ class ViewHolder(
 
     fun updateView(savedReplace: PartFields, index: Int) {
         (adapter.context as AppCompatActivity).runOnUiThread {
+            this.index = index
             this.field = adapter.fields[index]
             titleTextView.text = field.name
             updateLeftState(field.getter.call(savedReplace) as Float)
@@ -169,6 +170,7 @@ class ViewHolder(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateLeftState(leftDistance: Float) {
         val floored: Int = floor(leftDistance).toInt()
         stateTextView.text = "$floored km"
