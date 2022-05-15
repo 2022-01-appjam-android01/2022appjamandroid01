@@ -2,6 +2,7 @@ package com.applay22.appjam01.partInfo
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
@@ -62,15 +63,23 @@ class MainActivity : AppCompatActivity() {
             tv.text = it
 
             layout.addView(tv)
+            tv.setOnClickListener{ tv ->
+                val bundle  = Bundle()
+                val intent = Intent(this,  DataManageActivity::class.java)
+                bundle.putString("request", "reset")
+                bundle.putString("reset", "$it")
+                intent.putExtras(bundle)
 
+                mactivityreslauncher.launch(intent)
+            }
         }
     }
 
     private fun handleResult(result: ActivityResult) {
         val bundle = result.data?.extras
-        val resultBundle = bundle?.getString("needToMaintain")
-        if (resultBundle != null) {
-            val requiredList = resultBundle.split(",")
+        val resultTxt = bundle?.getString("needToMaintain")
+        if (resultTxt != null) {
+            val requiredList = resultTxt.split(",")
             renderList(requiredList)
 
         }
