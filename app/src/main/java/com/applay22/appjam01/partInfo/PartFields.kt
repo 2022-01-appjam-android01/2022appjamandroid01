@@ -28,7 +28,7 @@ data class PartFields(
         this::class.memberProperties.forEach {
             if (it is KMutableProperty<*>) {
                 value = it.getter.call(this) as Float
-                if (value < distance) value -= distance
+                value = if (value<distance) 0f else value-distance
                 it.setter.call(this, value)
             }
         }

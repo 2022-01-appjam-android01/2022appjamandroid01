@@ -2,7 +2,6 @@ package com.applay22.appjam01.partInfo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
@@ -36,12 +35,13 @@ class MainActivity : AppCompatActivity() {
                 mIntent.putExtras(bundle)
                 mactivityreslauncher.launch(mIntent)
             }
+            binding.curkminput.setText("")
         }
         binding.allbtn.setOnClickListener {
             val mIntent = Intent(this, DataManageActivity::class.java)
             startActivity(mIntent)
         }
-        val intent = Intent(this,  DataManageActivity::class.java)
+        val intent = Intent(this, DataManageActivity::class.java)
         val bundle = Bundle()
         bundle.putString("request", "list")
         intent.putExtras(bundle)
@@ -63,11 +63,11 @@ class MainActivity : AppCompatActivity() {
             tv.text = it
 
             layout.addView(tv)
-            tv.setOnClickListener{ tv ->
-                val bundle  = Bundle()
-                val intent = Intent(this,  DataManageActivity::class.java)
+            tv.setOnClickListener { _ ->
+                val bundle = Bundle()
+                val intent = Intent(this, DataManageActivity::class.java)
                 bundle.putString("request", "reset")
-                bundle.putString("reset", "$it")
+                bundle.putString("reset", it)
                 intent.putExtras(bundle)
 
                 mactivityreslauncher.launch(intent)
@@ -80,10 +80,9 @@ class MainActivity : AppCompatActivity() {
         val resultTxt = bundle?.getString("needToMaintain")
         if (resultTxt != null) {
             val requiredList = resultTxt.split(",")
-            renderList(requiredList)
-
+            runOnUiThread {
+                renderList(requiredList)
+            }
         }
     }
-
-
 }

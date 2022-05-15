@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -251,10 +250,13 @@ class DataManage(
         val needToMaintain = ArrayList<String>()
         saved_replace.add_used(distance)
         fields.forEach {
+            val new_value = it.getter.call(saved_replace) as Float
+            editor.putFloat(it.name, new_value)
             if (isMaintainRequired(it)) {
                 needToMaintain.add(it.name)
             }
         }
+        editor.commit()
         return needToMaintain
     }
 
